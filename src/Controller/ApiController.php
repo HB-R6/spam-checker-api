@@ -6,6 +6,7 @@ use App\Repository\SpamDomainRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,11 +22,17 @@ class ApiController extends AbstractController
         $data = $request->toArray();
 
         if (!isset($data['email'])) {
-            throw new BadRequestHttpException("L'email est obligatoire");
+            return $this->json(
+                ['error' => "L'email est obligatoire"],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         if (filter_var($data['email'], FILTER_VALIDATE_EMAIL) === false) {
-            throw new UnprocessableEntityHttpException("L'email est invalide");
+            return $this->json(
+                ['error' => "L'email est invalide"],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         $email = $data['email'];
