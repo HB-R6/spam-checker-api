@@ -21,7 +21,7 @@ class ApiController extends AbstractController
     {
         $data = $request->toArray();
 
-        if (!isset($data['email'])) {
+        if (!isset($data['email']) || empty($data['email'])) {
             return $this->json(
                 ['error' => "L'email est obligatoire"],
                 Response::HTTP_BAD_REQUEST
